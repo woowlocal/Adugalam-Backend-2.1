@@ -207,14 +207,15 @@ DEFAULT_FROM_EMAIL = f"TurfApp <{EMAIL_HOST_USER}>"
 # --------------------------------------------------
 # RAZORPAY CONFIG
 
-RAZORPAY_KEY_ID = "rzp_live_S2qvjT5ZF9ktdQ"
-RAZORPAY_KEY_SECRET = "dewrEebNJvz5tHCtozV01syN"
-
-# VITE_API_BASE_URL=http://127.0.0.1:8000
+RAZORPAY_KEY_ID = config("RAZORPAY_KEY_ID", default="")
+RAZORPAY_KEY_SECRET = config("RAZORPAY_KEY_SECRET", default="")
 
 
-WHATSAPP_API_URL = "https://103.229.250.150/unified/v2/send"
-WHATSAPP_CLIENT_ID = "woowlocal5dhn6wxesv14a2m"
-WHATSAPP_CLIENT_PASSWORD = "dnud6xluv1uopqss6amv1fxaenv0f56p"
-WHATSAPP_FROM_NUMBER = "916380433385"
-WHATSAPP_USER_ID = 3
+# --------------------------------------------------
+# WHATSAPP CONFIG
+
+WHATSAPP_API_URL = config("WHATSAPP_API_URL", default="https://103.229.250.150/unified/v2/send")
+WHATSAPP_CLIENT_ID = config("WHATSAPP_CLIENT_ID", default="")
+WHATSAPP_CLIENT_PASSWORD = config("WHATSAPP_CLIENT_PASSWORD", default="")
+WHATSAPP_FROM_NUMBER = config("WHATSAPP_FROM_NUMBER", default="")
+WHATSAPP_USER_ID = config("WHATSAPP_USER_ID", default=3, cast=int)

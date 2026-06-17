@@ -1,0 +1,57 @@
+# cloudbuild.yaml — placed at the repository root
+#
+# Cloud Build cannot auto-detect a Dockerfile in a subdirectory.
+# This file explicitly tells Cloud Build:
+#   1. Where the Dockerfile lives (dir: backend/turf_backend)
+#   2. What image name to produce
+#   3. How to deploy that image to Cloud Run
+
+substitutions:
+  _REGION: asia-south1          # Change if your Cloud Run region is different
+  _SERVICE: turf-backend        # Cloud Run service name
+
+steps:
+  # ── Step 1: Build the Docker image ──────────────────────────────────────────
+  - name: "gcr.io/cloud-builders/docker"
+    id: "build"
+    args:
+      - build
+      - --tag
+      - "$_REGION-docker.pkg.dev/$PROJECT_ID/$_SERVICE/$_SERVICE:$COMMIT_SHA"
+      - --tag
+      - "$_REGION-docker.pkg.dev/$PROJECT_ID/$_SERVICE/$_SERVICE:latest"
+      - --cache-from
+      - "$_REGION-docker.pkg.dev/$PROJECT_ID/$_SERVICE/$_SERVICE:latest"
+      - --file
+      - backend/turf_backend/Dockerfile   # ← path to Dockerfile from repo root
+      - backend/turf_backend              # ← build context (same folder)
+
+  # ── Step 2: Push both tags to Artifact Registry ─────────────────────────────
+  - name: "gcr.io/cloud-builders/docker"
+    id: "push"
+    args:
+      - push
+      - --all-tags
+      - "$_REGION-docker.pkg.dev/$PROJECT_ID/$_SERVICE/$_SERVICE"
+
+  # ── Step 3: Deploy to Cloud Run ─────────────────────────────────────────────
+  - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    id: "deploy"
+    entrypoint: gcloud
+    args:
+      - run
+      - deploy
+      - $_SERVICE
+      - --image=$_REGION-docker.pkg.dev/$PROJECT_ID/$_SERVICE/$_SERVICE:$COMMIT_SHA
+      - --region=$_REGION
+      - --platform=managed
+      - --allow-unauthenticated
+      - --port=8080
+
+# Push the final tagged image to Artifact Registry
+images:
+  - "$_REGION-docker.pkg.dev/$PROJECT_ID/$_SERVICE/$_SERVICE:$COMMIT_SHA"
+  - "$_REGION-docker.pkg.dev/$PROJECT_ID/$_SERVICE/$_SERVICE:latest"
+
+options:
+  logging: CLOUD_LOGGING_ONLY

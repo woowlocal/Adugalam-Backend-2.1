@@ -54,4 +54,5 @@ images:
   - "$_REGION-docker.pkg.dev/$PROJECT_ID/$_SERVICE/$_SERVICE:latest"
 
 options:
-  logging: CLOUD_LOGGING_ONLY
+  logging: NONE
+  defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET

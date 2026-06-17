@@ -1,0 +1,56 @@
+# ── Python cache ─────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+
+# ── Virtual environments ──────────────────────────────────────
+venv/
+.venv/
+env/
+.env/
+
+# ── Environment / secrets (never bake into the image) ────────
+.env
+.env.*
+!.env.example
+
+# ── Local development / debug artefacts ──────────────────────
+*.sqlite3
+db.sqlite3
+*.log
+*.txt
+*.json
+*.sql
+
+# ── IDE / OS noise ───────────────────────────────────────────
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# ── Git ──────────────────────────────────────────────────────
+.git/
+.gitignore
+
+# ── Media uploads (served from Supabase/GCS, not the image) ──
+media/
+turf_images/
+
+# ── Debug / scratch scripts (not needed in production) ───────
+debug_*.py
+test_*.py
+fix_*.py
+scratch_*.py
+*.ipynb
+
+# ── Large pip bootstrap file ──────────────────────────────────
+get-pip.py
+
+# ── Collected static (generated during docker build) ─────────
+staticfiles/
+
+# ── Docker build itself ───────────────────────────────────────
+Dockerfile
+.dockerignore

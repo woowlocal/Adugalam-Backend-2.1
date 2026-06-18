@@ -20,10 +20,22 @@ from django.urls import path,include
 
 
 
+import os
+from django.conf import settings
+from django.http import HttpResponse
+
+def assetlinks_view(request):
+    file_path = os.path.join(settings.BASE_DIR, 'assetlinks.json')
+    try:
+        with open(file_path, 'r') as f:
+            return HttpResponse(f.read(), content_type='application/json')
+    except FileNotFoundError:
+        return HttpResponse("[]", content_type='application/json')
+
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include('core.urls')),
-    
+    path(".well-known/assetlinks.json", assetlinks_view),
 ]
     #-------- TURF --------
 

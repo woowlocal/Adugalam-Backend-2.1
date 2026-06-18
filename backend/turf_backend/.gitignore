@@ -42,3 +42,5 @@ build/
 
 setup_secrets.sh
 *.sql
+
+assetlinks.json

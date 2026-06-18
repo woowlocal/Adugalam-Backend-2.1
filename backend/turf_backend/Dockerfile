@@ -12,13 +12,10 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 WORKDIR /app
 
-# Install system-level build dependencies needed by some Python packages
-# (e.g., mysqlclient needs gcc and default-libmysqlclient-dev).
-# These are only needed at build time; they won't appear in the final image.
+# psycopg2-binary bundles its own libpq — no system postgres libs needed.
+# Only gcc is kept for any other C-extension packages in requirements.txt.
 RUN apt-get update && apt-get install -y --no-install-recommends \
     gcc \
-    default-libmysqlclient-dev \
-    pkg-config \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy only requirements first to leverage Docker layer caching.
@@ -45,11 +42,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 # Cloud Run injects PORT (default 8080); the app must respect it.
 ENV PORT=8080
 
-# Only the runtime shared library for mysqlclient is needed here
-# (not the full dev headers / gcc).
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    default-libmysqlclient-dev \
-    && rm -rf /var/lib/apt/lists/*
+# No system postgres libraries needed — psycopg2-binary is fully self-contained.
 
 # Create a non-root user for security best practices.
 # Running as root inside a container is a security risk.

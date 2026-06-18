@@ -25,7 +25,7 @@ SECRET_KEY = config(
     default="django-insecure-change-this-in-production"
 )
 
-DEBUG = True
+DEBUG = config("DEBUG", default=False, cast=bool)
 
 APPEND_SLASH = False
 
@@ -111,19 +111,16 @@ TEMPLATES = [
 
 
 # --------------------------------------------------
-# DATABASE (MySQL)
+# DATABASE (Supabase PostgreSQL)
 # --------------------------------------------------
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.mysql",
-        "NAME": config("DB_NAME", default="turf_db"),
-        "USER": config("DB_USER", default="root"),
-        "PASSWORD": config("DB_PASSWORD", default="root"),
-        "HOST": config("DB_HOST", default="127.0.0.1"),
-        "PORT": config("DB_PORT", default="3306"),
-        "OPTIONS": {
-            "init_command": "SET sql_mode='STRICT_TRANS_TABLES'"
-        },
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": config("DB_NAME", default="postgres"),
+        "USER": config("DB_USER", default="postgres"),
+        "PASSWORD": config("DB_PASSWORD", default=""),
+        "HOST": config("DB_HOST", default="localhost"),
+        "PORT": config("DB_PORT", default="5432"),
     }
 }
 
@@ -161,6 +158,8 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
 
 # --------------------------------------------------
 # DRF + JWT CONFIG
@@ -193,12 +192,12 @@ load_dotenv()
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
-EMAIL_HOST = os.getenv("SMTP_HOST")
-EMAIL_PORT = int(os.getenv("SMTP_PORT"))
-EMAIL_HOST_USER = os.getenv("SMTP_USER")
-EMAIL_HOST_PASSWORD = os.getenv("SMTP_PASS")
+EMAIL_HOST      = config("SMTP_HOST", default="smtp.gmail.com")
+EMAIL_PORT      = config("SMTP_PORT", default=587, cast=int)
+EMAIL_HOST_USER = config("SMTP_USER", default="")
+EMAIL_HOST_PASSWORD = config("SMTP_PASS", default="")
 
-EMAIL_USE_TLS = True
+EMAIL_USE_TLS = config("SMTP_TLS", default=True, cast=bool)
 EMAIL_USE_SSL = False
 
 DEFAULT_FROM_EMAIL = f"TurfApp <{EMAIL_HOST_USER}>"

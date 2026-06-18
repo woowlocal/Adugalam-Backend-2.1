@@ -40,4 +40,5 @@ htmlcov/
 dist/
 build/
 
+setup_secrets.sh
 *.sql

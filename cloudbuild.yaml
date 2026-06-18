@@ -12,6 +12,7 @@ steps:
   # ── Step 1: Build the Docker image ──────────────────────────────────────────
   - name: "gcr.io/cloud-builders/docker"
     id: "build"
+    dir: "backend/turf_backend"
     args:
       - build
       - --tag
@@ -20,9 +21,7 @@ steps:
       - "$_REGION-docker.pkg.dev/$PROJECT_ID/$_SERVICE/$_SERVICE:latest"
       - --cache-from
       - "$_REGION-docker.pkg.dev/$PROJECT_ID/$_SERVICE/$_SERVICE:latest"
-      - --file
-      - backend/turf_backend/Dockerfile
-      - backend/turf_backend
+      - .
 
   # ── Step 2: Push both tags to Artifact Registry ─────────────────────────────
   - name: "gcr.io/cloud-builders/docker"

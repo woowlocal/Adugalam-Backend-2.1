@@ -30,6 +30,7 @@ if GCS_BUCKET:
             "BACKEND": "storages.backends.gcloud.GoogleCloudStorage",
             "OPTIONS": {
                 "bucket_name": GCS_BUCKET,
+                "querystring_auth": False,
             },
         },
         "staticfiles": {

@@ -31,7 +31,7 @@ if GCS_BUCKET:
             "BACKEND": "storages.backends.gcloud.GoogleCloudStorage",
             "OPTIONS": {
                 "bucket_name": GCS_BUCKET,
-                "default_acl": "publicRead",
+                # No default_acl — bucket uses uniform access control (allUsers set at bucket level)
             },
         },
         "staticfiles": {

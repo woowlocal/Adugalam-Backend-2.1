@@ -16,6 +16,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
+# --------------------------------------------------
+# GOOGLE CLOUD STORAGE (Media files in production)
+# Cloud Run filesystem is ephemeral — use GCS for images
+# --------------------------------------------------
+import os
+GCS_BUCKET = os.environ.get("GCS_BUCKET_NAME", "")
+
+if GCS_BUCKET:
+    DEFAULT_FILE_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
+    GS_BUCKET_NAME = GCS_BUCKET
+    GS_DEFAULT_ACL = "publicRead"
+    MEDIA_URL = f"https://storage.googleapis.com/{GCS_BUCKET}/"
+
 
 # --------------------------------------------------
 # SECURITY

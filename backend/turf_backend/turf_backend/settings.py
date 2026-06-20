@@ -19,27 +19,16 @@ MEDIA_ROOT = BASE_DIR / "media"
 # --------------------------------------------------
 # GOOGLE CLOUD STORAGE (Media files in production)
 # Cloud Run filesystem is ephemeral — use GCS for images
-# Django 5.x uses STORAGES dict (DEFAULT_FILE_STORAGE is deprecated)
 # --------------------------------------------------
 import os
 GCS_BUCKET = os.environ.get("GCS_BUCKET_NAME", "")
 
 if GCS_BUCKET:
-    # Django 4.2+ / 5.x format
-    STORAGES = {
-        "default": {
-            "BACKEND": "storages.backends.gcloud.GoogleCloudStorage",
-            "OPTIONS": {
-                "bucket_name": GCS_BUCKET,
-                # No default_acl — bucket uses uniform access control (allUsers set at bucket level)
-            },
-        },
-        "staticfiles": {
-            "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
-        },
-    }
+    DEFAULT_FILE_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
     GS_BUCKET_NAME = GCS_BUCKET
+    GS_DEFAULT_ACL = "publicRead"
     MEDIA_URL = f"https://storage.googleapis.com/{GCS_BUCKET}/"
+
 
 
 # --------------------------------------------------

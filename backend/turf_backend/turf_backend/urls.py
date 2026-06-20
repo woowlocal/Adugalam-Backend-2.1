@@ -20,17 +20,22 @@ from django.urls import path,include
 
 
 
-import os
-from django.conf import settings
-from django.http import HttpResponse
+from django.http import JsonResponse
 
 def assetlinks_view(request):
-    file_path = os.path.join(settings.BASE_DIR, 'assetlinks.json')
-    try:
-        with open(file_path, 'r') as f:
-            return HttpResponse(f.read(), content_type='application/json')
-    except FileNotFoundError:
-        return HttpResponse("[]", content_type='application/json')
+    data = [
+      {
+        "relation": ["delegate_permission/common.handle_all_urls"],
+        "target": {
+          "namespace": "android_app",
+          "package_name": "com.adugalam.app",
+          "sha256_cert_fingerprints": [
+            "B0:72:25:BE:5D:8F:85:1F:40:86:A5:54:3B:DD:E0:B7:F4:02:A7:BD:85:7B:E1:5C:82:4B:24:6E:3F:0C:43:11"
+          ]
+        }
+      }
+    ]
+    return JsonResponse(data, safe=False)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
